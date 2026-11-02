@@ -219,8 +219,8 @@ open class FSPageControl: UIControl {
     fileprivate func setNeedsUpdateIndicators() {
         self.needsUpdateIndicators = true
         self.setNeedsLayout()
-        DispatchQueue.main.async {
-            self.updateIndicatorsIfNecessary()
+        DispatchQueue.main.async { [weak self] in
+            self?.updateIndicatorsIfNecessary()
         }
     }
     
@@ -270,8 +270,8 @@ open class FSPageControl: UIControl {
     
     fileprivate func setNeedsCreateIndicators() {
         self.needsCreateIndicators = true
-        DispatchQueue.main.async {
-            self.createIndicatorsIfNecessary()
+        DispatchQueue.main.async { [weak self] in
+            self?.createIndicatorsIfNecessary()
         }
     }
     
@@ -302,9 +302,9 @@ open class FSPageControl: UIControl {
     
 }
 
-extension UIControl.State: Hashable {
-    public var hashValue: Int {
-        return Int((6777*self.rawValue+3777)%UInt(UInt16.max))
+extension UIControl.State: @retroactive Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.rawValue)
     }
 }
 

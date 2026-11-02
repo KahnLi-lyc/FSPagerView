@@ -68,3 +68,5 @@ fastlane/screenshots
 fastlane/test_output
 
 Index/*
+# Generated package workspace of the consumer fixture
+Fixtures/Consumer/.swiftpm/

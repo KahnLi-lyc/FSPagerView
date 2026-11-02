@@ -26,7 +26,11 @@ open class FSPagerViewCell: UICollectionViewCell {
         self.contentView.addSubview(view)
         view.addSubview(textLabel)
         
-        textLabel.addObserver(self, forKeyPath: "font", options: [.old,.new], context: kvoContext)
+        self.textLabelFontObservation = textLabel.observe(\.font, options: [.old,.new]) { [weak self] _, _ in
+            MainActor.assumeIsolated {
+                self?.setNeedsLayout()
+            }
+        }
         
         _textLabel = textLabel
         return textLabel
@@ -47,7 +51,8 @@ open class FSPagerViewCell: UICollectionViewCell {
     fileprivate weak var _textLabel: UILabel?
     fileprivate weak var _imageView: UIImageView?
     
-    fileprivate let kvoContext = UnsafeMutableRawPointer(bitPattern: 0)
+    // Released together with the cell, which also invalidates the observation.
+    fileprivate var textLabelFontObservation: NSKeyValueObservation?
     fileprivate let selectionColor = UIColor(white: 0.2, alpha: 0.2)
     
     fileprivate weak var _selectedForegroundView: UIView?
@@ -107,12 +112,6 @@ open class FSPagerViewCell: UICollectionViewCell {
         self.contentView.layer.shadowOffset = .zero
     }
     
-    deinit {
-        if let textLabel = _textLabel {
-            textLabel.removeObserver(self, forKeyPath: "font", context: kvoContext)
-        }
-    }
-    
     override open func layoutSubviews() {
         super.layoutSubviews()
         if let imageView = _imageView {
@@ -136,16 +135,6 @@ open class FSPagerViewCell: UICollectionViewCell {
         }
         if let selectedForegroundView = _selectedForegroundView {
             selectedForegroundView.frame = self.contentView.bounds
-        }
-    }
-
-    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if context == kvoContext {
-            if keyPath == "font" {
-                self.setNeedsLayout()
-            }
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
     }
     

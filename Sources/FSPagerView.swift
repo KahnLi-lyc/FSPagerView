@@ -13,6 +13,7 @@
 import UIKit
 
 @objc
+@MainActor
 public protocol FSPagerViewDataSource: NSObjectProtocol {
     
     /// Asks your data source object for the number of items in the pager view.
@@ -26,6 +27,7 @@ public protocol FSPagerViewDataSource: NSObjectProtocol {
 }
 
 @objc
+@MainActor
 public protocol FSPagerViewDelegate: NSObjectProtocol {
     
     /// Asks the delegate if the item should be highlighted during tracking.
@@ -306,11 +308,6 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
     
     #endif
 
-    deinit {
-        self.collectionView.dataSource = nil
-        self.collectionView.delegate = nil
-    }
-
     // MARK: - UICollectionViewDataSource
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -575,8 +572,18 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         guard self.automaticSlidingInterval > 0 && self.timer == nil else {
             return
         }
-        self.timer = Timer.scheduledTimer(timeInterval: TimeInterval(self.automaticSlidingInterval), target: self, selector: #selector(self.flipNext(sender:)), userInfo: nil, repeats: true)
-        RunLoop.current.add(self.timer!, forMode: .common)
+        // The block holds the pager weakly, so a pending timer never keeps it alive.
+        let timer = Timer(timeInterval: TimeInterval(self.automaticSlidingInterval), repeats: true) { [weak self] timer in
+            guard let self else {
+                timer.invalidate()
+                return
+            }
+            MainActor.assumeIsolated {
+                self.flipNext(sender: nil)
+            }
+        }
+        RunLoop.current.add(timer, forMode: .common)
+        self.timer = timer
     }
     
     @objc
