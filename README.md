@@ -1,3 +1,26 @@
+> **独立维护的 SwiftPM fork**：本仓库 `master` 面向 Swift 6.0+ 工具链、Swift 6 语言模式和 iOS 16+，
+> 仅通过 Swift Package Manager 分发。升级前阅读 [Swift 6 迁移指南](docs/SWIFT6_MIGRATION.md)；
+> 下方原上游说明中的系统版本、CocoaPods、Carthage 与 Objective-C 用法不再适用于本 fork。
+
+## Fork 说明
+
+- Fork：https://github.com/KahnLi-lyc/FSPagerView（`master` 为维护分支）
+- 上游：https://github.com/WenchaoD/FSPagerView，基线 `f90ab7d2ee6847823708a0a4e11e87c3ee4e6e48`
+- 保留原 [MIT 许可](LICENSE) 与作者声明；维护流程见 [MAINTENANCE](docs/MAINTENANCE.md)、
+  [BRANCHING](docs/BRANCHING.md)、[上游审查](docs/UPSTREAM_REVIEW.md)、[验收记录](docs/VALIDATION.md)。
+
+### Swift Package Manager
+
+添加 `https://github.com/KahnLi-lyc/FSPagerView`，并固定一个已审查的 `master` 完整 commit：
+
+```swift
+.package(url: "https://github.com/KahnLi-lyc/FSPagerView", revision: "<full-commit-sha>")
+```
+
+链接 product `FSPagerView`，然后 `import FSPagerView`。
+
+---
+
 ![fspagerview](https://cloud.githubusercontent.com/assets/5186464/24086370/45e7e8dc-0d49-11e7-86aa-139354fe00c5.jpg)
 
 [![Languages](https://img.shields.io/badge/language-swift%205.0%20|%20objc-FF69B4.svg?style=plastic)](#) <br/>
