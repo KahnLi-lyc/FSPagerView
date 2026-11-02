@@ -21,6 +21,7 @@ public enum FSPagerViewTransformerType: Int {
     case cubic
 }
 
+@MainActor
 open class FSPagerViewTransformer: NSObject {
     
     open internal(set) weak var pagerView: FSPagerView?

@@ -16,9 +16,10 @@ open class FSPagerViewLayoutAttributes: UICollectionViewLayoutAttributes {
         guard let object = object as? FSPagerViewLayoutAttributes else {
             return false
         }
-        var isEqual = super.isEqual(object)
-        isEqual = isEqual && (self.position == object.position)
-        return isEqual
+        // UIKit compares layout attributes on the main thread.
+        return MainActor.assumeIsolated {
+            super.isEqual(object) && self.position == object.position
+        }
     }
     
     open override func copy(with zone: NSZone? = nil) -> Any {
