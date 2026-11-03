@@ -27,6 +27,9 @@
 | `FSPageControl` 延迟刷新 | `DispatchQueue.main.async` 强捕获 self | 弱捕获，控件先释放时不再执行 |
 | `UIControl.State: Hashable` | 自定义 `hashValue` | `@retroactive Hashable`，`hash(into:)` 使用 `rawValue`。公开一致性保留，哈希值不同（不应持久化） |
 | 隐私清单 | 无 | `PrivacyInfo.xcprivacy`（无追踪、无 Required Reason API） |
+| 无动画尺寸变化（Dynamic Type、UIStackView、分屏） | `UICollectionView.setFrame` 按比例改写偏移，`scrollViewDidScroll` 据此改写 `currentIndex`，页面错位 | 改 frame 期间不从偏移推算 index，尺寸变化后重新 prepare，按原 index 居中 |
+| 旋转等动画尺寸变化 | layout 原样采用 UIKit 提议的偏移，无限轮播横屏时落到别的页，转回竖屏偏 8pt | `FSPagerViewLayout` 覆写 `targetContentOffset(forProposedContentOffset:)`，返回当前页居中的偏移；`currentIndex` 与可见页一致 |
+| `textLabel` 的 Dynamic Type | `preferredFont(.body)` 但不随系统字号变化 | `adjustsFontForContentSizeCategory = true`；字号类别变化时 cell 重新布局，标签条按新字号加高，不再截字。自定义字体的宿主不受影响 |
 
 ## 不再维护
 

@@ -262,6 +262,7 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         return animationKeys.contains(where: { rotationAnimationKeys.contains($0) })
     }
     fileprivate var possibleTargetingIndexPath: IndexPath?
+    fileprivate var isResizingCollectionView = false
     
     // MARK: - Overriden functions
     
@@ -279,7 +280,14 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         super.layoutSubviews()
         self.backgroundView?.frame = self.bounds
         self.contentView.frame = self.bounds
+        // UICollectionView rescales its content offset when its frame size changes; keep the current page instead.
+        let isResizing = self.collectionView.frame.size != self.contentView.bounds.size
+        self.isResizingCollectionView = isResizing
         self.collectionView.frame = self.contentView.bounds
+        self.isResizingCollectionView = false
+        if isResizing {
+            self.collectionViewLayout.forceInvalidate()
+        }
     }
     
     open override func willMove(toWindow newWindow: UIWindow?) {
@@ -388,7 +396,7 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if !self.isPossiblyRotating && self.numberOfItems > 0 {
+        if !self.isPossiblyRotating && !self.isResizingCollectionView && self.numberOfItems > 0 {
             // In case someone is using KVO
             let currentIndex = lround(Double(self.scrollOffset)) % self.numberOfItems
             if (currentIndex != self.currentIndex) {

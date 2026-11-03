@@ -48,9 +48,40 @@
 - 边界：滚动轴方向折叠期间 `scrollOffset` 为 NaN，不应读取；只验证同步改 frame 的折叠，
   未验证带动画的折叠、Auto Layout／UIStackView 宿主、真机和 iPad。
 
+## Demo UI 自动化与多设备（2026-11-03）
+
+- 设备（均为专用 Simulator，Xcode 27.2）：
+  - iPhone `FSPagerView-Tests`（iPhone 18 Pro / iOS 27.2，`DBEB7006-8EE4-4FDA-BA2F-B4066A3CC861`）
+  - iPad `FSPagerView-Tests-iPad`（iPad Pro 13-inch (M5) / iOS 27.2，`D64760F1-6F24-46F6-AFE6-6DDCB0BB80EF`）
+  - iPhone Duo `FSPagerView-Tests-Duo`（iOS 27.2 机型专用运行时 `iOS-27-2-iPhone19-4`，`B609F8A9-FE88-4A3E-BD86-CBC748E71395`）
+- 新增 `Fixtures/DemoApp`（UIKit 宿主，Swift 6 + complete 并发检查，iOS 16）和 `scripts/test-demo-ui.sh`。
+  XCUITest 共 3 项：
+  - 动画折叠／展开：Auto Layout 约束与 UIStackView `isHidden` × 宽／高 × 横／竖 × 有限／无限，共 16 种配置；
+  - 横竖屏旋转；
+  - 无障碍审计（`performAccessibilityAudit`）。
+- 自动化发现并修复的 3 个库问题（每个都先写出失败的无宿主测试，修复后转绿）：
+  1. 动画尺寸变化（旋转）：layout 原样采用 UIKit 提议的偏移，横屏落到别的页，转回竖屏偏 8pt。
+     修复：覆写 `targetContentOffset(forProposedContentOffset:)`。
+  2. 无动画尺寸变化（RocketSim 在 Duo 上切到最大无障碍字号时发现）：`UICollectionView.setFrame`
+     按比例改写偏移，`currentIndex` 从 2 变成 3。修复：改 frame 期间不推算 index，尺寸变化后按原 index 重新居中。
+  3. `textLabel` 不随 Dynamic Type 变化，打开后放大字号会被截断。修复：开启
+     `adjustsFontForContentSizeCategory`，字号类别变化时 cell 重新布局。
+- 结果（三台设备分别执行）：
+  - `scripts/test-ios.sh … SWIFT_STRICT_CONCURRENCY=complete`：21 项 XCTest，0 failures；
+  - `scripts/test-demo-ui.sh`：3 项 UI 测试，0 failures。
+  另外 `scripts/check-consumer.sh` 两个宿主均构建成功；全部日志的并发诊断为 0 条。
+- RocketSim 交互验收（iPhone Duo，开启 live preview）：翻到第 2 页 → UIStackView 宽度折叠／展开
+  → 左转横屏再转回 → 最大无障碍字号再恢复。每步截图核对，Page 2 都居中、两侧不露邻页，
+  index 保持为 2。截图保存在任务证据目录 `rocketsim/`。
+
 ## 边界
 
-- 未验证最低 Swift 6.0 编译器、iOS 16 运行时、iPad／真机、旋转和 VoiceOver。
+- 未验证最低 Swift 6.0 编译器、iOS 16 运行时和真机（已连接的 iPhone 12 Pro Max 留待后续）。
+- VoiceOver 只做了自动化无障碍审计和无障碍树检查；XCUITest 不能开启 VoiceOver，也不能模拟它的手势，
+  未做朗读与手势实测。`FSPageControl` 的指示点不是无障碍元素，审计没有标记，按现状保留。
+- iPhone Duo 的机身折叠／展开姿态没有覆盖：`simctl` 与 RocketSim 都没有切换入口，只能在
+  Simulator 图形界面里切换。
+- Demo 在最大无障碍字号下按钮会换行、轮播被挤窄，这是 Demo 布局本身的样子，用来测试窄宽度，不是库的问题。
 - Xcode test sysroot 诊断（`-Wincompatible-sysroot`）为工具链提示，独立记录。
 - 托管 GitHub Actions 配置已加入；本地验证不代表远端 runner 已执行成功。
 - 本轮没有接入任何消费者（club-circle-ios 另起任务）。

@@ -102,6 +102,65 @@ final class PackageRegressionTests: XCTestCase {
         }
     }
 
+    func testResizeKeepsCurrentPageCentered() {
+        let sizes = [CGSize(width: 100, height: 120), CGSize(width: 718, height: 300), CGSize(width: 320, height: 200)]
+        for direction in [FSPagerView.ScrollDirection.horizontal, .vertical] {
+            for isInfinite in [false, true] {
+                let source = Source(count: 5)
+                let pager = makePager(source: source)
+                pager.scrollDirection = direction
+                pager.isInfinite = isInfinite
+                let window = mount(pager)
+                pager.reloadData()
+                pager.layoutIfNeeded()
+                pager.scrollToItem(at: 2, animated: false)
+                pager.layoutIfNeeded()
+                for size in sizes {
+                    let context = "\(direction) infinite=\(isInfinite) size=\(size)"
+                    // Dynamic Type, split view and stack views resize the pager without an animation.
+                    pager.frame.size = size
+                    pager.layoutIfNeeded()
+                    let section = isInfinite ? pager.collectionView.numberOfSections / 2 : 0
+                    let expected = pager.collectionViewLayout.contentOffset(for: IndexPath(item: 2, section: section))
+                    XCTAssertEqual(pager.currentIndex, 2, context)
+                    XCTAssertEqual(pager.collectionView.contentOffset.x, expected.x, accuracy: 0.5, context)
+                    XCTAssertEqual(pager.collectionView.contentOffset.y, expected.y, accuracy: 0.5, context)
+                }
+                unmount(window)
+            }
+        }
+    }
+
+    func testBoundsChangeTargetsCurrentPage() {
+        for direction in [FSPagerView.ScrollDirection.horizontal, .vertical] {
+            for isInfinite in [false, true] {
+                let context = "\(direction) infinite=\(isInfinite)"
+                let source = Source(count: 5)
+                let pager = makePager(source: source)
+                pager.scrollDirection = direction
+                pager.isInfinite = isInfinite
+                let window = mount(pager)
+                pager.reloadData()
+                pager.layoutIfNeeded()
+                pager.scrollToItem(at: 2, animated: false)
+                pager.layoutIfNeeded()
+
+                // A rotation resizes the pager inside an animation, and UIKit then asks the layout for a target offset.
+                UIView.animate(withDuration: 0.3) {
+                    pager.frame.size = CGSize(width: 718, height: 300)
+                    pager.layoutIfNeeded()
+                }
+                let layout = pager.collectionViewLayout!
+                let section = isInfinite ? pager.collectionView.numberOfSections / 2 : 0
+                let expected = layout.contentOffset(for: IndexPath(item: 2, section: section))
+                let proposed = CGPoint(x: expected.x / 2, y: expected.y / 2)
+                XCTAssertEqual(layout.targetContentOffset(forProposedContentOffset: proposed), expected, context)
+                XCTAssertEqual(pager.currentIndex, 2, context)
+                unmount(window)
+            }
+        }
+    }
+
     func testSelectionReportsLogicalIndex() {
         let source = Source(count: 3)
         let pager = makePager(source: source)
@@ -209,6 +268,7 @@ final class PackageRegressionTests: XCTestCase {
     func testCellRelayoutsTextLabelWhenFontChanges() throws {
         let cell = FSPagerViewCell(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
         let label = try XCTUnwrap(cell.textLabel)
+        XCTAssertTrue(label.adjustsFontForContentSizeCategory)
         cell.layoutIfNeeded()
         label.font = .systemFont(ofSize: 20)
         cell.layoutIfNeeded()
@@ -216,5 +276,25 @@ final class PackageRegressionTests: XCTestCase {
         label.font = .systemFont(ofSize: 40)
         cell.layoutIfNeeded()
         XCTAssertEqual(label.superview?.frame.height ?? 0, 60, accuracy: 0.001)
+    }
+
+    func testCellRelayoutsTextLabelForLargerContentSize() throws {
+        guard #available(iOS 17.0, *) else {
+            throw XCTSkip("traitOverrides requires iOS 17")
+        }
+        let cell = FSPagerViewCell(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
+        let label = try XCTUnwrap(cell.textLabel)
+        label.text = "Page 0"
+        let window = mount(cell)
+        defer { unmount(window) }
+        cell.layoutIfNeeded()
+        let regularHeight = label.frame.height
+
+        cell.traitOverrides.preferredContentSizeCategory = .accessibilityExtraExtraExtraLarge
+        cell.updateTraitsIfNeeded()
+        cell.layoutIfNeeded()
+        XCTAssertGreaterThan(label.font.pointSize, 40)
+        XCTAssertGreaterThan(label.frame.height, regularHeight)
+        XCTAssertGreaterThanOrEqual(label.frame.height, label.font.lineHeight)
     }
 }
