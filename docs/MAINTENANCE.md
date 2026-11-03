@@ -34,6 +34,11 @@ scripts/check-consumer.sh <fresh-output-directory>
 scripts/check-concurrency-diagnostics.sh <build-log> [...]
 ```
 
+Create the dedicated Simulator yourself (`xcrun simctl create FSPagerView-Tests …`)
+and boot it before testing; the scripts never pick or boot a device. The package
+regressions include collapsing the pager to zero width, height, or size and
+expanding it again without losing `currentIndex`.
+
 The package workspace under `.swiftpm` is selected explicitly because the
 upstream `FSPagerViewExamples.xcworkspace` and `FSPagerView.xcodeproj` also
 define an `FSPagerView` scheme without the package tests. Animated scrolling does

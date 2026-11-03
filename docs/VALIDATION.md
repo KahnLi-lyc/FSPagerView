@@ -31,6 +31,23 @@
 - 图片使用 Lorem Picsum 固定 id（1015/1016/1018/1036/1043），`imageView` aspectFill 正常。
 - 宿主需按 iOS 27 要求采用 Scene 生命周期，否则 UIKit 在启动时主动终止进程；与本库无关。
 
+## 折叠／展开回归（2026-11-03）
+
+- 环境：Xcode 27.2 (27B52)，新建专用 Simulator `FSPagerView-Tests`
+  （iPhone 18 Pro / iOS 27.2，`DBEB7006-8EE4-4FDA-BA2F-B4066A3CC861`）；11-02 的设备已不存在。
+- 新增 `testCollapseAndExpandKeepsCurrentPage`：横／竖方向 × 有限／无限 × 折叠到零尺寸、零宽、零高，
+  停在第 2 页后折叠再展开回 320×200，断言 collectionView 确实折叠、`currentIndex` 全程为 2、
+  展开后 `scrollOffset` 为 2 且第 2 页 cell 可见。
+- 原假设：滚动轴方向尺寸归零时自动 itemSize 使间距为 0，`currentIndex` 会被 NaN 重置为 0。
+  在未修改的库代码上单独运行：12 组中 6 组确实进入零间距（`scrollOffset` 为 NaN），
+  但 `currentIndex` 仍为 2，测试通过。折叠时的 bounds 调整没有经由 `scrollViewDidScroll` 改写 index，
+  因此不修改库代码，该测试作为回归防护保留。
+- `scripts/test-ios.sh … SWIFT_STRICT_CONCURRENCY=complete`：18 项 XCTest，0 failures。
+- `scripts/check-consumer.sh`：Swift 5、Swift 6 宿主均构建成功。
+- 并发诊断门禁（库测试日志、两个宿主日志）：0 条。
+- 边界：滚动轴方向折叠期间 `scrollOffset` 为 NaN，不应读取；只验证同步改 frame 的折叠，
+  未验证带动画的折叠、Auto Layout／UIStackView 宿主、真机和 iPad。
+
 ## 边界
 
 - 未验证最低 Swift 6.0 编译器、iOS 16 运行时、iPad／真机、旋转和 VoiceOver。
