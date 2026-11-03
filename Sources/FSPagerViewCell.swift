@@ -23,6 +23,7 @@ open class FSPagerViewCell: UICollectionViewCell {
         let textLabel = UILabel(frame: .zero)
         textLabel.textColor = .white
         textLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        textLabel.adjustsFontForContentSizeCategory = true
         self.contentView.addSubview(view)
         view.addSubview(textLabel)
         
@@ -112,6 +113,14 @@ open class FSPagerViewCell: UICollectionViewCell {
         self.contentView.layer.shadowOffset = .zero
     }
     
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        // Dynamic Type swaps the label font without a KVO notification; resize the label bar.
+        if self.traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
+            self.setNeedsLayout()
+        }
+    }
+
     override open func layoutSubviews() {
         super.layoutSubviews()
         if let imageView = _imageView {

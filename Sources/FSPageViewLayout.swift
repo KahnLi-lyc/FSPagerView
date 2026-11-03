@@ -195,7 +195,15 @@ class FSPagerViewLayout: UICollectionViewLayout {
         proposedContentOffset = CGPoint(x: proposedContentOffsetX, y: proposedContentOffsetY)
         return proposedContentOffset
     }
-    
+
+    override open func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint) -> CGPoint {
+        // UIKit proposes its own anchor after an animated bounds change such as rotation; keep the current page centered.
+        guard self.itemSpacing > 0, let contentOffset = self.contentOffsetForCurrentIndex() else {
+            return proposedContentOffset
+        }
+        return contentOffset
+    }
+
     // MARK:- Internal functions
     
     internal func forceInvalidate() {
@@ -262,14 +270,20 @@ class FSPagerViewLayout: UICollectionViewLayout {
     }
     
     fileprivate func adjustCollectionViewBounds() {
-        guard let collectionView = self.collectionView, let pagerView = self.pagerView else {
+        guard let collectionView = self.collectionView, let contentOffset = self.contentOffsetForCurrentIndex() else {
             return
+        }
+        let newBounds = CGRect(origin: contentOffset, size: collectionView.frame.size)
+        collectionView.bounds = newBounds
+    }
+
+    fileprivate func contentOffsetForCurrentIndex() -> CGPoint? {
+        guard self.collectionView != nil, let pagerView = self.pagerView else {
+            return nil
         }
         let currentIndex = pagerView.currentIndex
         let newIndexPath = IndexPath(item: currentIndex, section: pagerView.isInfinite ? self.numberOfSections/2 : 0)
-        let contentOffset = self.contentOffset(for: newIndexPath)
-        let newBounds = CGRect(origin: contentOffset, size: collectionView.frame.size)
-        collectionView.bounds = newBounds
+        return self.contentOffset(for: newIndexPath)
     }
     
     fileprivate func applyTransform(to attributes: FSPagerViewLayoutAttributes, with transformer: FSPagerViewTransformer?) {
