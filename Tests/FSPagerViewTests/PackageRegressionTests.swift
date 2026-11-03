@@ -68,6 +68,40 @@ final class PackageRegressionTests: XCTestCase {
         XCTAssertEqual(pager.currentIndex, 0)
     }
 
+    func testCollapseAndExpandKeepsCurrentPage() {
+        let expanded = CGSize(width: 320, height: 200)
+        let collapsedSizes = [CGSize.zero, CGSize(width: 0, height: 200), CGSize(width: 320, height: 0)]
+        for direction in [FSPagerView.ScrollDirection.horizontal, .vertical] {
+            for isInfinite in [false, true] {
+                for collapsed in collapsedSizes {
+                    let context = "\(direction) infinite=\(isInfinite) collapsed=\(collapsed)"
+                    let source = Source(count: 4)
+                    let pager = makePager(source: source)
+                    pager.scrollDirection = direction
+                    pager.isInfinite = isInfinite
+                    let window = mount(pager)
+                    pager.reloadData()
+                    pager.layoutIfNeeded()
+                    pager.scrollToItem(at: 2, animated: false)
+                    pager.layoutIfNeeded()
+                    XCTAssertEqual(pager.currentIndex, 2, context)
+
+                    pager.frame.size = collapsed
+                    pager.layoutIfNeeded()
+                    XCTAssertEqual(pager.collectionView.frame.size, collapsed, context)
+                    XCTAssertEqual(pager.currentIndex, 2, context)
+
+                    pager.frame.size = expanded
+                    pager.layoutIfNeeded()
+                    XCTAssertEqual(pager.currentIndex, 2, context)
+                    XCTAssertEqual(pager.scrollOffset, 2, accuracy: 0.001, context)
+                    XCTAssertEqual(pager.cellForItem(at: 2)?.textLabel?.text, "2", context)
+                    unmount(window)
+                }
+            }
+        }
+    }
+
     func testSelectionReportsLogicalIndex() {
         let source = Source(count: 3)
         let pager = makePager(source: source)
