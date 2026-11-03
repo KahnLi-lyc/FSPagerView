@@ -1,0 +1,69 @@
+# Regenerate FSPagerViewDemo.xcodeproj with `xcodegen generate` after editing this file.
+name: FSPagerViewDemo
+options:
+  bundleIdPrefix: com.kahnli.fspagerview
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    DEVELOPMENT_TEAM: ""
+    TARGETED_DEVICE_FAMILY: "1,2"
+packages:
+  FSPagerView:
+    path: ../..
+targets:
+  FSPagerViewDemo:
+    type: application
+    platform: iOS
+    sources: [Sources]
+    dependencies:
+      - package: FSPagerView
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: FSPagerView Demo
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kahnli.fspagerview.demo
+  FSPagerViewDemoUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: FSPagerViewDemo
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kahnli.fspagerview.demo.uitests
+        # XCTest itself requires iOS 17; the app under test stays at iOS 16.
+        IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+        TEST_TARGET_NAME: FSPagerViewDemo
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  FSPagerViewDemo:
+    build:
+      targets:
+        FSPagerViewDemo: all
+        FSPagerViewDemoUITests: [test]
+    test:
+      targets: [FSPagerViewDemoUITests]
