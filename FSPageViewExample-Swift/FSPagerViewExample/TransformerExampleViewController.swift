@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FSPagerView
 
 class TransformerExampleViewController: UIViewController,FSPagerViewDataSource,FSPagerViewDelegate, UITableViewDataSource,UITableViewDelegate {
     

@@ -74,6 +74,27 @@
   → 左转横屏再转回 → 最大无障碍字号再恢复。每步截图核对，Page 2 都居中、两侧不露邻页，
   index 保持为 2。截图保存在任务证据目录 `rocketsim/`。
 
+## Swift 示例升级与只保留 SwiftPM（2026-11-03）
+
+- 删除 Objective-C 示例、Objective-C 兼容层、Carthage 工程和 podspec；`Package.swift` 去掉对应的 exclude。
+- `FSPageViewExample-Swift` 改用 XcodeGen 生成：Swift 6、complete 并发检查、iOS 16、Scene 生命周期，
+  通过本地 package 依赖本库，不带签名团队。`FSPagerViewExamples.xcworkspace` 包含它和 `Fixtures/DemoApp`。
+  三个示例 VC 只加了 `import FSPagerView` 就通过了 Swift 6 编译。
+- 新增 `scripts/test-swift-example.sh`，从 workspace 构建（与在 Xcode 里打开 workspace 运行的路径一致）。
+  UI 冒烟测试会每次重新启动 App，依次进入三个示例并滑动轮播。这里不点返回按钮，因为 iPhone Duo 把返回按钮
+  画在右侧传感器条里，导航栏中找不到它。
+- 结果（iPhone、iPad、iPhone Duo 三台专用 Simulator 分别执行）：
+  - `test-ios.sh`：21 项，0 failures；
+  - `test-demo-ui.sh`：3 项，0 failures；
+  - `test-swift-example.sh`：1 项，0 failures。
+  另外 `check-consumer.sh` 两个宿主均构建成功，全部日志并发诊断 0 条。
+  iPad 上 XCUITest 每一步都要等满 60 秒才能确认 SpringBoard 空闲，所以耗时明显更长，不影响结果。
+- RocketSim 在 iPhone Duo 上走查（用独立的 live preview，与其他任务并行）：
+  - Banner：图片铺满，滑动和自动轮播正常；
+  - Transformer：linear、ferris wheel 两种效果的相邻页排布正确；
+  - PageControl：滑到第 2 页后指示点同步，横屏下仍停在第 2 页且对齐。
+  截图保存在任务证据目录 `rocketsim/`。
+
 ## 边界
 
 - 未验证最低 Swift 6.0 编译器、iOS 16 运行时和真机（已连接的 iPhone 12 Pro Max 留待后续）。

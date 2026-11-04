@@ -8,7 +8,7 @@
 
 import UIKit
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
@@ -44,3 +44,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+
+// iOS 27 requires the scene life cycle; Main.storyboard is loaded through the scene manifest.
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+
+    var window: UIWindow?
+
+}

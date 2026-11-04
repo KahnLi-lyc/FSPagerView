@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FSPagerView
 
 class BasicExampleViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,FSPagerViewDataSource,FSPagerViewDelegate {
     

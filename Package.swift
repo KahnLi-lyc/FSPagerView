@@ -9,7 +9,6 @@ let package = Package(
         .target(
             name: "FSPagerView",
             path: "Sources",
-            exclude: ["FSPagerViewObjcCompat.h", "FSPagerViewObjcCompat.m"],
             resources: [.copy("PrivacyInfo.xcprivacy")]
         ),
         .testTarget(name: "FSPagerViewTests", dependencies: ["FSPagerView"]),

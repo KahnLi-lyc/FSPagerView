@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/wenchaoding/Developer/Xcode/FSPageSlider/FSPageSliderExample-Swift/FSPagerViewExample.xcodeproj">
+      location = "self:">
    </FileRef>
 </Workspace>
