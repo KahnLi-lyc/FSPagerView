@@ -1,6 +1,6 @@
 > **独立维护的 SwiftPM fork**：本仓库 `master` 面向 Swift 6.0+ 工具链、Swift 6 语言模式和 iOS 16+，
 > 仅通过 Swift Package Manager 分发。升级前阅读 [Swift 6 迁移指南](docs/SWIFT6_MIGRATION.md)；
-> 下方原上游说明中的系统版本、CocoaPods、Carthage 与 Objective-C 用法不再适用于本 fork。
+> 不支持 CocoaPods、Carthage 与 Objective-C；对应的 podspec、Carthage 工程、Objective-C 兼容层与示例已删除。
 
 ## Fork 说明
 
@@ -8,6 +8,8 @@
 - 上游：https://github.com/WenchaoD/FSPagerView，基线 `f90ab7d2ee6847823708a0a4e11e87c3ee4e6e48`
 - 保留原 [MIT 许可](LICENSE) 与作者声明；维护流程见 [MAINTENANCE](docs/MAINTENANCE.md)、
   [BRANCHING](docs/BRANCHING.md)、[上游审查](docs/UPSTREAM_REVIEW.md)、[验收记录](docs/VALIDATION.md)。
+- 示例：打开 `FSPagerViewExamples.xcworkspace`，scheme `FSPagerViewExample` 是原有的三个示例页，
+  `FSPagerViewDemo` 是折叠／旋转等场景的测试宿主；两者都通过本地 SwiftPM 包引用本库。
 
 ### Swift Package Manager
 
@@ -23,14 +25,9 @@
 
 ![fspagerview](https://cloud.githubusercontent.com/assets/5186464/24086370/45e7e8dc-0d49-11e7-86aa-139354fe00c5.jpg)
 
-[![Languages](https://img.shields.io/badge/language-swift%205.0%20|%20objc-FF69B4.svg?style=plastic)](#) <br/>
-[![Platform](https://img.shields.io/badge/platform-iOS%20|%20tvOS-blue.svg?style=plastic)](http://cocoadocs.org/docsets/FSPagerView)
-[![Version](https://img.shields.io/cocoapods/v/FSPagerView.svg?style=plastic)](http://cocoadocs.org/docsets/FSPagerView) 
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=plastic)](https://github.com/Carthage/Carthage)
+[![Languages](https://img.shields.io/badge/language-swift%206-FF69B4.svg?style=plastic)](#) <br/>
+[![Platform](https://img.shields.io/badge/platform-iOS%2016+-blue.svg?style=plastic)](#)
 [![SPM compatible](https://img.shields.io/badge/SPM-compatible-FF9966.svg?style=plastic)](https://swift.org/package-manager/)
-
-|<b>SWIFT</b>|[<b>OBJECTIVE-C</b>](https://github.com/WenchaoD/FSPagerView/blob/master/README-OBJECTIVE-C.md) |
-|---|---|
 
 **FSPagerView** is an elegant Screen Slide Library implemented primarily with ***UICollectionView***. It is extremely helpful for making Banner、Product Show、Welcome/Guide Pages、Screen/ViewController Sliders.
 
@@ -42,7 +39,6 @@
 *  Fully customizable ***page control***.
 *  Rich build-in 3D transformers.
 *  ***Simple*** and ***Delightful*** api usage.
-*  Support **SWIFT** and **OBJECTIVE-C**.
 
 ## Demos
 * [Demo1 - Banner](#banner)
@@ -269,27 +265,7 @@ pageControl.setPath(UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 8, height: 8)
 ```
 
 ## Installation
-* Manually
-* Cocoapods
-* Carthage
-
-### Manually
-1. ***[Download](#)*** the source code.
-2. Extract the zip file, simply drag folder ***Sources*** into your project.
-3. Make sure ***Copy items if needed*** is checked.
-
-### Cocoapods
-```ruby
-use_frameworks!
-target '<Your Target Name>' do
-    pod 'FSPagerView'
-end
-```
-
-### Carthage
-```ruby
-github "WenchaoD/FSPagerView"
-```
+Swift Package Manager only; see [Swift Package Manager](#swift-package-manager) above.
 
 ## Tutorial
 * [Getting started](#getting_started)

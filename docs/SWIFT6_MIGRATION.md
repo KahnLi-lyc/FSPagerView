@@ -31,9 +31,11 @@
 | 旋转等动画尺寸变化 | layout 原样采用 UIKit 提议的偏移，无限轮播横屏时落到别的页，转回竖屏偏 8pt | `FSPagerViewLayout` 覆写 `targetContentOffset(forProposedContentOffset:)`，返回当前页居中的偏移；`currentIndex` 与可见页一致 |
 | `textLabel` 的 Dynamic Type | `preferredFont(.body)` 但不随系统字号变化 | `adjustsFontForContentSizeCategory = true`；字号类别变化时 cell 重新布局，标签条按新字号加高，不再截字。自定义字体的宿主不受影响 |
 
-## 不再维护
+## 不再支持
 
-Objective-C 兼容层、podspec、Carthage 工程和两个示例 App 原样保留，不维护、不验证。
+只支持 SwiftPM。Objective-C 兼容层（`FSPagerViewObjcCompat.h/.m`）、Objective-C 示例、podspec 和 Carthage 工程
+已删除，需要时查看 Git 历史。公开 API 上的 `@objc` 标注保留不变。Swift 示例已升级为 Swift 6、iOS 16，
+并通过本地 package 依赖本库。
 
 ## 验证
 
