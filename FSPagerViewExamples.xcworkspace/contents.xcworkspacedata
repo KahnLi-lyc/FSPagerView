@@ -5,9 +5,6 @@
       location = "group:FSPageViewExample-Swift/FSPagerViewExample.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:FSPagerViewExample-Objc/FSPagerViewExample-Objc.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:FSPagerView/FSPagerView.xcodeproj">
+      location = "group:Fixtures/DemoApp/FSPagerViewDemo.xcodeproj">
    </FileRef>
 </Workspace>

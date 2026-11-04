@@ -8,29 +8,30 @@
 
 import XCTest
 
+@MainActor
 class FSPagerViewExampleUITests: XCTestCase {
-        
-    override func setUp() {
-        super.setUp()
-        
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-        
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-        // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
-        XCUIApplication().launch()
 
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+    /// Opens every example from a fresh launch and swipes its pager.
+    func testEveryExampleShowsItsPager() {
+        let app = XCUIApplication()
+        for example in ["Banner Example", "Transformer Example", "PageControl Example"] {
+            // Relaunch instead of tapping Back: iPhone Duo draws the back control outside the navigation bar.
+            app.launch()
+            let row = app.staticTexts[example]
+            XCTAssertTrue(row.waitForExistence(timeout: 10), example)
+            row.tap()
+
+            let pager = app.collectionViews.firstMatch
+            XCTAssertTrue(pager.waitForExistence(timeout: 5), example)
+            XCTAssertTrue(pager.cells.firstMatch.waitForExistence(timeout: 5), example)
+            pager.swipeLeft()
+            XCTAssertTrue(pager.cells.firstMatch.exists, example)
+
+            let screenshot = XCTAttachment(screenshot: app.screenshot())
+            screenshot.name = example
+            screenshot.lifetime = .keepAlways
+            add(screenshot)
+        }
     }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    func testExample() {
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
+
 }

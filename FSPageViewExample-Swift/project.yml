@@ -1,0 +1,72 @@
+# Regenerate FSPagerViewExample.xcodeproj with `xcodegen generate` after editing this file.
+name: FSPagerViewExample
+options:
+  bundleIdPrefix: com.kahnli.fspagerview
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    DEVELOPMENT_TEAM: ""
+    TARGETED_DEVICE_FAMILY: "1,2"
+packages:
+  FSPagerView:
+    path: ..
+targets:
+  FSPagerViewExample:
+    type: application
+    platform: iOS
+    sources:
+      - FSPagerViewExample
+      - path: ../Resources
+        buildPhase: resources
+    dependencies:
+      - package: FSPagerView
+    info:
+      path: FSPagerViewExample/Info.plist
+      properties:
+        CFBundleDisplayName: FSPagerView
+        UILaunchStoryboardName: LaunchScreen
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+                UISceneStoryboardFile: Main
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kahnli.fspagerview.example
+  FSPagerViewExampleUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [FSPagerViewExampleUITests]
+    dependencies:
+      - target: FSPagerViewExample
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kahnli.fspagerview.example.uitests
+        # XCTest itself requires iOS 17; the app under test stays at iOS 16.
+        IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+        TEST_TARGET_NAME: FSPagerViewExample
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  FSPagerViewExample:
+    build:
+      targets:
+        FSPagerViewExample: all
+        FSPagerViewExampleUITests: [test]
+    test:
+      targets: [FSPagerViewExampleUITests]

@@ -124,7 +124,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CTG-eH-B7s" customClass="FSPagerView" customModule="FSPagerViewExample" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CTG-eH-B7s" customClass="FSPagerView" customModule="FSPagerView">
                                 <rect key="frame" x="0.0" y="64" width="375" height="193"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="CTG-eH-B7s" secondAttribute="height" multiplier="375:193" id="rZx-r3-VSz"/>
@@ -139,7 +139,7 @@
                                     <outlet property="delegate" destination="8S4-ui-raa" id="ZXc-ha-CLU"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mWZ-ul-B44" customClass="FSPageControl" customModule="FSPagerViewExample" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mWZ-ul-B44" customClass="FSPageControl" customModule="FSPagerView">
                                 <rect key="frame" x="0.0" y="232" width="375" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="wm0-Qk-cZE"/>
@@ -237,7 +237,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tSq-4e-Jil" customClass="FSPagerView" customModule="FSPagerViewExample" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tSq-4e-Jil" customClass="FSPagerView" customModule="FSPagerView">
                                 <rect key="frame" x="0.0" y="84" width="375" height="193"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="tSq-4e-Jil" secondAttribute="height" multiplier="375:193" id="8cc-kO-s6Y"/>
@@ -315,7 +315,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dn3-eb-Xp7" customClass="FSPagerView" customModule="FSPagerViewExample" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dn3-eb-Xp7" customClass="FSPagerView" customModule="FSPagerView">
                                 <rect key="frame" x="0.0" y="64" width="375" height="193"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Dn3-eb-Xp7" secondAttribute="height" multiplier="375:193" id="i9F-Jy-ACA"/>
@@ -376,7 +376,7 @@
                                     <outlet property="delegate" destination="lma-uy-r7Q" id="2q3-xG-a4L"/>
                                 </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6XD-Hd-JIV" customClass="FSPageControl" customModule="FSPagerViewExample" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6XD-Hd-JIV" customClass="FSPageControl" customModule="FSPagerView">
                                 <rect key="frame" x="0.0" y="227" width="375" height="30"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
                                 <constraints>
